@@ -18,7 +18,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Please add missing field. All fields are required...");
   }
 
-  //Check if user is already registered
+  //Check if email or username already registered
   const emailExists = await User.findOne({ email });
   const usernameExists = await User.findOne({ username });
 
@@ -42,13 +42,8 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    //Generate and respond to user with JWT
-    res.status(201).json({
-      _id: user.id,
-      usename: user.username,
-      email: user.email,
-      token: generateToken(),
-    });
+    //Generate and respond to user with JWT and data
+    res.status(201).json(successResponse(user));
   } else {
     res.status(400);
     throw new Error("Invalid provided data...");
@@ -58,9 +53,20 @@ const registerUser = asyncHandler(async (req, res) => {
 // descr : Authenticate user
 // route : users/login
 // req   : POST
-const loginUser = (req, res) => {
-  res.send({ message: "login user" });
-};
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  //Search for email in DB
+  const user = await User.findOne({ email });
+
+  //email found and provided password matches password in DB
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.status(201).json(successResponse(user));
+  } else {
+    res.status(400);
+    throw new Error("Invalid credentials...");
+  }
+});
 
 // descr : Get user data
 // route : users/myData
@@ -69,7 +75,19 @@ const myData = (req, res) => {
   res.send({ message: "users data" });
 };
 
-//Generate JWT
+//send this response object on successfull register/login
+const successResponse = (user) => {
+  
+  const response = {
+    _id: user.id,
+    usename: user.username,
+    email: user.email,
+    token: generateToken(user._id),
+  };
+  return response;
+};
+
+//Generate JWT 
 const generateToken = (id) => {
   return jwt.sign({ id }, JWT_SECRET, {
     expiresIn: "7d",
