@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
+const JWT_SECRET = process.env.JWT_SECRET;
 //middleware for handling exceptions. read more : https://www.npmjs.com/package/express-async-handler
 const asyncHandler = require("express-async-handler");
 
@@ -41,7 +42,13 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    res.status(201).send(user);
+    //Generate and respond to user with JWT
+    res.status(201).json({
+      _id: user.id,
+      usename: user.username,
+      email: user.email,
+      token: generateToken(),
+    });
   } else {
     res.status(400);
     throw new Error("Invalid provided data...");
@@ -60,6 +67,13 @@ const loginUser = (req, res) => {
 // req   : GET
 const myData = (req, res) => {
   res.send({ message: "users data" });
+};
+
+//Generate JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, JWT_SECRET, {
+    expiresIn: "7d",
+  });
 };
 
 module.exports = { registerUser, loginUser, myData };
