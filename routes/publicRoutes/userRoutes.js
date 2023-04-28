@@ -3,11 +3,10 @@ const router = express.Router();
 const {
   registerUser,
   loginUser,
-  myData,
-} = require("../controllers/userController");
+} = require("../../controllers/publicControllers");
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/myData", myData);
 
 module.exports = router;
+ 

@@ -8,8 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const asyncHandler = require("express-async-handler");
 
 // descr : Register new user
-// route : users/register
-// req   : POST
+// route : POST users/register
 const registerUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
 
@@ -20,7 +19,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   //Check if email or username already registered
   const emailExists = await User.findOne({ email });
-  const usernameExists = await User.findOne({ username });
+  const usernameExists = await User.findOne({ username }); 
 
   if (emailExists) {
     res.status(400);
@@ -51,8 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 // descr : Authenticate user
-// route : users/login
-// req   : POST
+// route : POST users/login
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -67,13 +65,6 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid credentials...");
   }
 });
-
-// descr : Get user data
-// route : users/myData
-// req   : GET
-const myData = (req, res) => {
-  res.send({ message: "users data" });
-};
 
 //send this response object on successfull register/login
 const successResponse = (user) => {
@@ -94,4 +85,4 @@ const generateToken = (id) => {
   });
 };
 
-module.exports = { registerUser, loginUser, myData };
+module.exports = { registerUser, loginUser};
