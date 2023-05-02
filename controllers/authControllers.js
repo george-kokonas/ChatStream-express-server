@@ -44,10 +44,12 @@ const registerUser = asyncHandler(async (req, res) => {
   if (user) {
     //Generate and respond to user with JWT and data
     const token = generateToken(user._id);
-    res.cookie("token", token, cookieOptions);
-    res.status(201).json(successResponse(user));
+    res.status(200).send(token);
+    // res.cookie("token", token, cookieOptions);
+    // res.status(201).json(successResponse(user));
   } else {
     res.status(400);
+    res.send({message : "Invalid credentials"})
     throw new Error("Invalid provided data...");
   }
 });
@@ -63,10 +65,12 @@ const loginUser = asyncHandler(async (req, res) => {
   //email found and provided password matches password in DB
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user._id);
-    res.cookie("token", token, cookieOptions);
-    res.status(201).json(successResponse(user));
+    res.status(200).send(token);
+    // res.cookie("token", token, cookieOptions);
+    // res.status(201).json(successResponse(user));
   } else {
     res.status(400);
+    res.send({message : "Invalid credentials"})
     throw new Error("Invalid credentials...");
   }
 });
