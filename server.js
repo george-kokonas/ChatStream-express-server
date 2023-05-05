@@ -4,7 +4,7 @@ const dbConnect = require("./database/connection");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-const conversationRoute = require("./routes/conversations");
+const chatRoutes = require("./routes/chatRoutes");
 
 
 const Port = process.env.PORT || 8000;
@@ -17,7 +17,7 @@ app.use(cors());
 
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
-app.use("/conversation",conversationRoute)
+app.use("/chat",chatRoutes)
 
 app.listen(Port, () => {
   console.log(`Server is listening on port ${Port}`);
