@@ -8,8 +8,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const asyncHandler = require("express-async-handler");
 
 
-// descr : Register new user
-// route : POST users/register
+// @desc   Register new user
+// @route  POST users/register
+// @access Public
 const registerUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
   
@@ -54,8 +55,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// descr : Authenticate user
-// route : POST users/login
+// @desc   Login User
+// @route  POST users/login
+// @access Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   
