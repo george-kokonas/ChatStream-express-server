@@ -1,4 +1,5 @@
 const ChatRoom = require("../models/ChatRoomModel");
+const Message = require("../models/MessageModel")
 const asyncHandler = require("express-async-handler");
 
 //@desc   Create new chatroom
@@ -15,7 +16,6 @@ const createChatRoom = asyncHandler(async (req, res) => {
   const newChatRoom = await ChatRoom.create({
     members: [senderId, receiverId],
   });
-  console.log();
 
   if (!newChatRoom) {
     res.status(400);
@@ -40,7 +40,29 @@ const getChatRoom = asyncHandler(async (req, res) => {
   res.status(200).json(chatRoom);
 });
 
+//@desc   Create new message
+//@route  Post /chat/createMessage
+//@access Private
+const createMessage = asyncHandler(async (req, res) => {
+  const message= req.body;
+
+  if (!message) {
+    res.status(400);
+    throw new Error("Message is required.");
+  }
+
+  const savedMessage = await Message.create(message);
+
+  if (!savedMessage) {
+    res.status(500);
+    throw new Error(`Unable to create new message.`);
+  }
+  res.status(200).json(savedMessage);
+});
+
+
 module.exports = {
   createChatRoom,
   getChatRoom,
+  createMessage,
 };

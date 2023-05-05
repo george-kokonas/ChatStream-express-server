@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const MessageSchema = new mongoose.Schema(
   {
-    conversationId:{
+    roomId:{
       type: String
     },
-    sender:{
+    senderId:{
       type:String
     },
     text:{
@@ -15,3 +15,4 @@ const MessageSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Message", MessageSchema);
+ 
