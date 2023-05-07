@@ -62,11 +62,11 @@ const loginUser = asyncHandler(async (req, res) => {
   
   //Search for email in DB
   const user = await User.findOne({ email });
-  
+
   //email found and provided password matches password in DB
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user._id);
-    res.status(200).send(token);
+    res.status(200).json({user,token}); 
     // res.cookie("token", token, cookieOptions);
     // res.status(201).json(successResponse(user));
   } else {
