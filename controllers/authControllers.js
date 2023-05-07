@@ -15,8 +15,8 @@ const registerUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
   
   if (!email || !username || !password) {
-    res.status(400);
-    throw new Error("Please add missing field. All fields are required...");
+    res.status(400).send({message : "Please add missing field..." });
+    throw new Error("Please add missing field...");
   }
   
   //Check if email or username already registered
@@ -24,10 +24,10 @@ const registerUser = asyncHandler(async (req, res) => {
   const usernameExists = await User.findOne({ username });
   
   if (emailExists) {
-    res.status(400);
+    res.status(400).send({message : "Email already registered..."})
     throw new Error("Email already registered");
   } else if (usernameExists) {
-    res.status(400);
+    res.status(400).send({message : "Username already registered..."});
     throw new Error("Username already registered");
   }
   
@@ -49,9 +49,8 @@ const registerUser = asyncHandler(async (req, res) => {
     // res.cookie("token", token, cookieOptions);
     // res.status(201).json(successResponse(user));
   } else {
-    res.status(400);
-    res.send({message : "Invalid credentials"})
-    throw new Error("Invalid provided data...");
+    res.status(400).send({message : "Unable to SignUp , please try again later..."})
+    throw new Error("Unable to SignUp...");
   }
 });
 
