@@ -4,6 +4,7 @@ const dbConnect = require("./database/connection");
 
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const Port = process.env.PORT || 8000;
 const app = express();
@@ -15,6 +16,7 @@ app.use(cors());
 
 app.use("/auth", authRoutes);
 app.use("/chat", chatRoutes);
+app.use("/user", userRoutes);
 
 app.listen(Port, () => {
   console.log(`Server is listening on port ${Port}`);
