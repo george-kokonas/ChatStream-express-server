@@ -15,7 +15,21 @@ const getUser = asyncHandler(async (req, res) => {
   res.status(200).send(user);
 });
 
+//@desc   Get user data
+//@route  Get /user/getRegisteredUsers
+//@access Private
+const getRegisteredUsers = asyncHandler(async(req,res) => {
+  const users = await User.find();
+
+  if(!users || users.length === 0 ){
+    res.status(404);
+    throw new Error("No users found");
+  }
+  res.send(users)
+})
+
 module.exports = {
   getUser,
+  getRegisteredUsers,
 }; 
  
