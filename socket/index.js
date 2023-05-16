@@ -19,25 +19,25 @@ const removeUser = (socketId) => {
 
 //get a user from onlineUsers array
 const getUser = (userId) => {
-  return onlineUsers.find(user => user.userId === userId)
-}
+  return onlineUsers.find((user) => user.userId === userId);
+};
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-  
+
   //take userId and socketId from user and add to the users array
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getOnlineUsers", onlineUsers);
   });
   //exchange messages
-  socket.on("sendMessage", ({senderId,receiverId, text}) =>{
+  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const receiver = getUser(receiverId);
     io.to(receiver?.socketId).emit("getMessage", {
       senderId,
-      text
-    })
-  })
+      text,
+    });
+  });
 
   //remove user from users array when disconnected
   socket.on("disconnect", () => {
@@ -49,7 +49,6 @@ io.on("connection", (socket) => {
   socket.on("logout", () => {
     console.log("user logged out");
     removeUser(socket.id);
-    console.log(onlineUsers);
     io.emit("getOnlineUsers", onlineUsers);
   });
 });
