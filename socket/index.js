@@ -24,13 +24,12 @@ const getUser = (userId) => {
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-
+  
   //take userId and socketId from user and add to the users array
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getOnlineUsers", onlineUsers);
   });
-
   //exchange messages
   socket.on("sendMessage", ({senderId,receiverId, text}) =>{
     const receiver = getUser(receiverId);
@@ -44,6 +43,13 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
     removeUser(socket.id);
+    io.emit("getOnlineUsers", onlineUsers);
+  });
+
+  socket.on("logout", () => {
+    console.log("user logged out");
+    removeUser(socket.id);
+    console.log(onlineUsers);
     io.emit("getOnlineUsers", onlineUsers);
   });
 });
