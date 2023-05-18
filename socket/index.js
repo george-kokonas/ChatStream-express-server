@@ -25,17 +25,25 @@ const getUser = (userId) => {
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  //take userId and socketId from user and add to the users array
+  //get userId and socketId from user and add to the users array
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getOnlineUsers", onlineUsers);
   });
+
   //exchange messages
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const receiver = getUser(receiverId);
     io.to(receiver?.socketId).emit("getMessage", {
       senderId,
       text,
+    });
+  });
+
+  socket.on("userTyping", ({ senderId, receiverId }) => {
+    const receiver = getUser(receiverId);
+    io.to(receiver?.socketId).emit("isTyping", {
+      senderId,
     });
   });
 
