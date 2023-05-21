@@ -32,10 +32,12 @@ io.on("connection", (socket) => {
   });
 
   //exchange messages
-  socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+  socket.on("sendMessage", ({ roomId, senderId, receiverId, text }) => {
     const receiver = getUser(receiverId);
     io.to(receiver?.socketId).emit("getMessage", {
+      roomId,
       senderId,
+      receiverId,
       text,
     });
   });

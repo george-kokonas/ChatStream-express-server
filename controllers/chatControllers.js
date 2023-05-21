@@ -22,7 +22,7 @@ const createChatRoom = asyncHandler(async (req, res) => {
     res.send({ message: "Can't create new ChatRoom" });
     throw new Error("Can't create new ChatRoom...");
   }
-  res.status(201).json(newChatRoom); 
+  res.status(201).json(newChatRoom);
 });
 
 //@desc   Retrieve existing chatroom by userId
@@ -60,7 +60,7 @@ const createMessage = asyncHandler(async (req, res) => {
   res.status(201).json(savedMessage);
 });
 
-//@desc   Retrieve messages by chatroom id
+//@desc   Retrieve messages for spesific chatroom
 //@route  Get /chat/getMessages
 //@access Private
 const getMessages = asyncHandler(async (req, res) => {
