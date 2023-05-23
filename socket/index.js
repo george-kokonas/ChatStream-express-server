@@ -32,15 +32,21 @@ io.on("connection", (socket) => {
   });
 
   //exchange messages
-  socket.on("sendMessage", ({ roomId, senderId, receiverId, text }) => {
-    const receiver = getUser(receiverId);
-    io.to(receiver?.socketId).emit("getMessage", {
-      roomId,
-      senderId,
-      receiverId,
-      text,
-    });
-  });
+  socket.on(
+    "sendMessage",
+    ({ _id, roomId, senderId, receiverId, text, isSeen, createdAt }) => {
+      const receiver = getUser(receiverId);
+      io.to(receiver?.socketId).emit("getMessage", {
+        _id,
+        roomId,
+        senderId,
+        receiverId,
+        text,
+        isSeen,
+        createdAt, 
+      }); 
+    }
+  );
 
   socket.on("userTyping", ({ senderId, receiverId }) => {
     const receiver = getUser(receiverId);

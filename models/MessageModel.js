@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 
 const MessageSchema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+    },
     roomId: {
       type: String,
     },
@@ -10,6 +13,9 @@ const MessageSchema = new mongoose.Schema(
     },
     text: {
       type: String,
+    },
+    isSeen: {
+      type: Boolean,
     },
   },
   {
