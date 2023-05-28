@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { uploadImage } = require("../controllers/profileControllers");
+const { setImage,setInfo } = require("../controllers/profileControllers");
 
-router.post("/uploadImage", uploadImage);
-
+router.post("/setImage", setImage);
+router.post("/setInfo", setInfo)
 module.exports = router;

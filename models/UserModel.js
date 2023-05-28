@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  profileInfo: {
+    type: String,
+    default: null,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);
