@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema({
     required: [true, "Please provide a password..."],
     unique: false,
   },
+  profileImage: {
+    type: String,
+    default: null,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);
