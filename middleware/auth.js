@@ -1,10 +1,21 @@
+const jwt = require("express-jwt");
+const JWT_SECRET = process.env.JWT_SECRET;
+
+const auth = jwt({
+  secret: JWT_SECRET,
+  algorithms: ["HS256"],
+});
+ 
+module.exports = auth; 
+
+/* CUSTOM TOKEN VERIFICATION
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
-//middleware for handling exceptions. read more : https://www.npmjs.com/package/express-async-handler
 const asyncHandler = require("express-async-handler");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const auth = asyncHandler(async (req, res, next) => {
+
   let token = null;
   const headerAuth = req.headers.authorization;
 
@@ -14,7 +25,7 @@ const auth = asyncHandler(async (req, res, next) => {
       //Get token from header
       token = headerAuth.split(" ")[1];
 
-      //Verify token and get id
+      //Verify token and get id 
       const decoded = jwt.verify(token, JWT_SECRET);
 
       //Get user from token and exclude the password
@@ -35,3 +46,4 @@ const auth = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = auth;
+*/

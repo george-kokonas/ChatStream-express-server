@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const auth = require("../middleware/auth");
 const {
   createChatRoom,
   getChatRoom,
@@ -7,10 +7,12 @@ const {
   getMessages,
 } = require("../controllers/chatControllers");
 
-router.post("/createChatRoom", createChatRoom);
-router.get("/getChatRoom/:userId", getChatRoom);
+const router = express.Router();
 
-router.post("/createMessage", createMessage);
-router.get("/getMessages/:requestedRoomId", getMessages);
+router.post("/createChatRoom",auth, createChatRoom);
+router.get("/getChatRoom/:userId", auth, getChatRoom);
+
+router.post("/createMessage",auth, createMessage);
+router.get("/getMessages/:requestedRoomId", auth, getMessages);
 
 module.exports = router;
