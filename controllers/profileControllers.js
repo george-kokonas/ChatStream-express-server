@@ -23,13 +23,15 @@ const setImage = asyncHandler(async (req, res) => {
   //update user profile photo
   const user = await User.findByIdAndUpdate(userId, {
     profileImage: uploadResponse.secure_url,
+  },{
+    new:true
   });
 
   if (!user) {
     res.status(500);
     throw new Error("Something went wrong...");
   }
-  res.json({ msg: "Profile Picture successfully updated!" });
+  res.status(201).json(user);
 });
 
 const setInfo = asyncHandler(async (req, res) => {
@@ -42,6 +44,8 @@ const setInfo = asyncHandler(async (req, res) => {
 
   const user = await User.findByIdAndUpdate(userId, {
     profileInfo: userInfo,
+  },{
+    new:true
   });
 
   if (!user) {
@@ -49,7 +53,7 @@ const setInfo = asyncHandler(async (req, res) => {
     throw new Error("Something went wrong...");
   }
 
-  res.json({ msg: "User Info Updated successfully!" });
+  res.status(201).json(user);
 });
 
 module.exports = {
