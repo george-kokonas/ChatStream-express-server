@@ -43,15 +43,18 @@ io.on("connection", (socket) => {
         receiverId,
         text,
         isSeen,
-        createdAt, 
-      }); 
+        createdAt,
+      });
     }
   );
 
-  socket.on("userTyping", ({ senderId, receiverId }) => {
+  //inform the user that someone is typing
+  socket.on("userTyping", ({ senderUsername, receiverId, currentRoomId }) => {
     const receiver = getUser(receiverId);
+    console.log(senderUsername);
     io.to(receiver?.socketId).emit("isTyping", {
-      senderId,
+      currentRoomId,
+      senderUsername,
     });
   });
 
