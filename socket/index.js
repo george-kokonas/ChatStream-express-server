@@ -1,4 +1,4 @@
-const io = require("socket.io")(process.env.PORT || 8080, {
+const io = require("socket.io")("https://chatapp-server-yms0.onrender.com", {
   cors: {
     origin: ["https://chatstream.netlify.app", "http://localhost:3000"],
   },
