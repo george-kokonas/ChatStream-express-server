@@ -1,14 +1,3 @@
-const jwt = require("express-jwt");
-const JWT_SECRET = process.env.JWT_SECRET;
-
-const auth = jwt({
-  secret: JWT_SECRET,
-  algorithms: ["HS256"],
-});
- 
-module.exports = auth; 
-
-/* CUSTOM TOKEN VERIFICATION
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
 const asyncHandler = require("express-async-handler");
@@ -46,4 +35,3 @@ const auth = asyncHandler(async (req, res, next) => {
 });
 
 module.exports = auth;
-*/
