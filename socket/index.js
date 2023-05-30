@@ -1,6 +1,6 @@
-const io = require("socket.io")(8080, {
+const io = require("socket.io")(process.env.PORT || 8080, {
   cors: {
-    origin: ["http://localhost:3000", "https://chatstream.netlify.app"]
+    origin: ["https://chatstream.netlify.app", "http://localhost:3000"],
   },
 });
 
@@ -51,7 +51,6 @@ io.on("connection", (socket) => {
   //inform the user that someone is typing
   socket.on("userTyping", ({ senderUsername, receiverId, currentRoomId }) => {
     const receiver = getUser(receiverId);
-    console.log(senderUsername);
     io.to(receiver?.socketId).emit("isTyping", {
       currentRoomId,
       senderUsername,
