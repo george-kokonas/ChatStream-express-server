@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const User = require("../models/UserModel");
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 const JWT_SECRET = process.env.JWT_SECRET;
-//middleware for handling exceptions. read more : https://www.npmjs.com/package/express-async-handler
 const asyncHandler = require("express-async-handler");
 
 // @desc   Register new user
@@ -42,9 +41,14 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
-    //Generate and respond to user with JWT and data
+    //generate token
     const token = generateToken(user._id);
-    res.status(200).json({ user, token });
+
+    //keep neccessary user data
+    const userData = filterUserData(user);
+
+    //respond with userData and token
+    res.status(200).json({ userData, token });
   } else {
     res
       .status(400)
@@ -62,10 +66,16 @@ const loginUser = asyncHandler(async (req, res) => {
   //Search for email in DB
   const user = await User.findOne({ email });
 
-  //email found and provided password matches password in DB
+  //if email is found check password match in DB
   if (user && (await bcrypt.compare(password, user.password))) {
+    //generate token
     const token = generateToken(user._id);
-    res.status(200).json({ user, token });
+
+    //keep neccessary user data
+    const userData = filterUserData(user);
+
+    //respond with userData and token
+    res.status(200).json({ userData, token });
   } else {
     res.status(400);
     res.send({ message: "Invalid credentials" });
@@ -73,30 +83,21 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+//Exlude password and email from user object
+const filterUserData = (user) => {
+  return {
+    _id: user._id,
+    username: user.username,
+    profileImage: user.profileImage,
+    profileInfo: user.profileInfo,
+  };
+};
+
 //Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, JWT_SECRET, {
     expiresIn: "7d",
   });
 };
-
-//TODO : SEND DATA WITH HTTP-ONLY COOKIE INSTEAD OF RESPONSE BODY
-/*
-//send this response object on successfull register/login
-const successResponse = (user) => {
-  const response = {
-    _id: user.id,
-    usename: user.username,
-    email: user.email,
-  };
-  return response;
-};
-
-//Set cookie
-const cookieOptions = {
-  httpOnly: true,
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-};
-*/
 
 module.exports = { registerUser, loginUser };
