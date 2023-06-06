@@ -25,18 +25,29 @@ const createChatRoom = asyncHandler(async (req, res) => {
   res.status(201).json(newChatRoom);
 });
 
-//@desc   Retrieve existing chatroom by userId
+//@desc   Retrieve existing chatroom by userId or roomId
 //@route  Get /chat/getChatRoom/:userId
+//@route  Get /chat/getNewChatRoom/:roomId
 //@access Private
 const getChatRoom = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  let chatRoom;
 
-  const chatRoom = await ChatRoom.find().where("members").equals(userId);
+  if (req.params.userId) {
+    const { userId } = req.params;
+    chatRoom = await ChatRoom.find().where("members").equals(userId);
+  } else if (req.params.roomId) {
+    const { roomId } = req.params;
+    chatRoom = await ChatRoom.findById(roomId);
+  } else {
+    res.status(400);
+    throw new Error("Invalid request");
+  }
 
   if (!chatRoom) {
     res.status(404);
-    throw new Error(`No chat room found for user ${userId}`);
+    chatRoom = [];
   }
+
   res.status(200).json(chatRoom);
 });
 
@@ -80,6 +91,7 @@ const getMessages = asyncHandler(async (req, res) => {
 module.exports = {
   createChatRoom,
   getChatRoom,
+  // getNewChatRoom,
   createMessage,
   getMessages,
 };

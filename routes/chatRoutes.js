@@ -9,10 +9,11 @@ const {
 
 const router = express.Router();
 
-router.post("/createChatRoom",auth, createChatRoom);
+router.post("/createChatRoom", auth, createChatRoom);
 router.get("/getChatRoom/:userId", auth, getChatRoom);
+router.get("/getNewChatRoom/:roomId", auth, getChatRoom);
 
-router.post("/createMessage",auth, createMessage);
+router.post("/createMessage", auth, createMessage);
 router.get("/getMessages/:requestedRoomId", auth, getMessages);
 
 module.exports = router;
