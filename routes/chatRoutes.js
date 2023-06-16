@@ -4,6 +4,7 @@ const {
   createChatRoom,
   getChatRoom,
   createMessage,
+  getLastMessages,
   getMessages,
 } = require("../controllers/chatControllers");
 
@@ -14,6 +15,7 @@ router.get("/getChatRoom/:userId", auth, getChatRoom);
 router.get("/getNewChatRoom/:roomId", auth, getChatRoom);
 
 router.post("/createMessage", auth, createMessage);
+router.get("/getLastMessages/:roomsIds",auth, getLastMessages);
 router.get("/getMessages/:requestedRoomId", auth, getMessages);
 
 module.exports = router;

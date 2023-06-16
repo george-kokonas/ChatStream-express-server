@@ -71,8 +71,38 @@ const createMessage = asyncHandler(async (req, res) => {
   res.status(201).json(savedMessage);
 });
 
+//@desc   Retrieve last messages for all user rooms
+//@route  Get /chat/getLastMessages:roomsIds
+//@access Private
+const getLastMessages = asyncHandler(async (req, res) => {
+  const { roomsIds } = req.params;
+  const idsArray = roomsIds.split(",");
+
+  let allMessages = [];
+
+  for (let i = 0; i < idsArray.length; i++) {
+    const roomMessages = await Message.find()
+      .where("roomId")
+      .equals(idsArray[i]);
+
+    if (!roomMessages) {
+      res.status(404);
+      throw new Error(`Unable retrieve messages.`);
+    }
+
+    allMessages.push(roomMessages);
+  }
+
+  //get last message of each room, excluding undefined values (rooms with no messages)
+  const lastMessages = allMessages
+    .map((nested) => nested[nested.length - 1])
+    .filter((message) => message !== undefined);
+
+  res.status(200).json(lastMessages);
+});
+
 //@desc   Retrieve messages for spesific chatroom
-//@route  Get /chat/getMessages
+//@route  Get /chat/getMessages:requestedRoomId
 //@access Private
 const getMessages = asyncHandler(async (req, res) => {
   const { requestedRoomId } = req.params;
@@ -91,7 +121,7 @@ const getMessages = asyncHandler(async (req, res) => {
 module.exports = {
   createChatRoom,
   getChatRoom,
-  // getNewChatRoom,
   createMessage,
+  getLastMessages,
   getMessages,
 };

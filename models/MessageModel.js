@@ -11,18 +11,21 @@ const MessageSchema = new mongoose.Schema(
     senderId: {
       type: String,
     },
+    receiverId: {
+      type: String,
+    },
     text: {
       type: String,
     },
     isSeen: {
       type: Boolean,
     },
+    createdAt: {
+      type: Date,
+    },
   },
   {
-    timestamps: {
-      createdAt: true,
-      updatedAt: false,
-    },
+    timestamps: false,
   }
 );
 
