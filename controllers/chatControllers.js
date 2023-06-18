@@ -71,6 +71,23 @@ const createMessage = asyncHandler(async (req, res) => {
   res.status(201).json(savedMessage);
 });
 
+//@desc   Retrieve messages for spesific chatroom
+//@route  Get /chat/getMessages:requestedRoomId
+//@access Private
+const getMessages = asyncHandler(async (req, res) => {
+  const { requestedRoomId } = req.params;
+
+  const messages = await Message.find({
+    roomId: requestedRoomId,
+  });
+
+  if (!messages) {
+    res.status(404);
+    throw new Error("Unable to retrieve messages...");
+  }
+  res.status(200).json(messages);
+});
+
 //@desc   Retrieve last messages for all user rooms
 //@route  Get /chat/getLastMessages:roomsIds
 //@access Private
@@ -92,7 +109,6 @@ const getLastMessages = asyncHandler(async (req, res) => {
 
     allMessages.push(roomMessages);
   }
-
   //get last message of each room, excluding undefined values (rooms with no messages)
   const lastMessages = allMessages
     .map((nested) => nested[nested.length - 1])
@@ -101,27 +117,61 @@ const getLastMessages = asyncHandler(async (req, res) => {
   res.status(200).json(lastMessages);
 });
 
-//@desc   Retrieve messages for spesific chatroom
-//@route  Get /chat/getMessages:requestedRoomId
+//@desc   Retrieve unseen messages
+//@route  Get /chat/getUnseenMessages:userId
 //@access Private
-const getMessages = asyncHandler(async (req, res) => {
-  const { requestedRoomId } = req.params;
+const getUnseenMessages = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
 
-  const messages = await Message.find({
-    roomId: requestedRoomId,
+  if (!userId) {
+    res.status(400);
+    throw new Error("Unable to retrieve messages status. User id not found...");
+  }
+
+  const unseenMessages = await Message.find({
+    receiverId: userId,
+    isSeen: false,
   });
 
-  if (!messages) {
-    res.status(404);
-    throw new Error("Unable to retrieve messages...");
+  if (!unseenMessages) {
+    res.status(400);
+    throw new Error("Unable to retrieve messages status...");
   }
-  res.status(200).json(messages);
+
+  res.status(200).json(unseenMessages);
+});
+
+//@desc   Update messages status to seen
+//@route  Put /chat/updateMessagesStatus
+//@access Private
+const updateMessagesStatus = asyncHandler(async (req, res) => {
+  const { roomId } = req.params;
+
+  try {
+    // Update only messages in the requested room with isSeen:false status
+    const result = await Message.updateMany(
+      { roomId, isSeen: false },
+      { $set: { isSeen: true } }
+    );
+    res.json({
+      success: true,
+      message: "Messages status updated successfully",
+    });
+  } catch (error) {
+    // Handle the database update error
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to update message status" });
+    throw new Error("Unable to update messages status...");
+  }
 });
 
 module.exports = {
   createChatRoom,
   getChatRoom,
   createMessage,
-  getLastMessages,
   getMessages,
+  getLastMessages,
+  getUnseenMessages,
+  updateMessagesStatus,
 };

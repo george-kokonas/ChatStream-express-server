@@ -6,6 +6,8 @@ const {
   createMessage,
   getLastMessages,
   getMessages,
+  getUnseenMessages,
+  updateMessagesStatus
 } = require("../controllers/chatControllers");
 
 const router = express.Router();
@@ -15,7 +17,9 @@ router.get("/getChatRoom/:userId", auth, getChatRoom);
 router.get("/getNewChatRoom/:roomId", auth, getChatRoom);
 
 router.post("/createMessage", auth, createMessage);
-router.get("/getLastMessages/:roomsIds",auth, getLastMessages);
 router.get("/getMessages/:requestedRoomId", auth, getMessages);
+router.get("/getLastMessages/:roomsIds",auth, getLastMessages);
+router.get("/getUnseenMessages/:userId", auth, getUnseenMessages)
+router.put("/updateMessagesStatus/:roomId",auth, updateMessagesStatus)
 
 module.exports = router;
