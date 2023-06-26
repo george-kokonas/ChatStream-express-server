@@ -89,36 +89,32 @@ const getMessages = asyncHandler(async (req, res) => {
 });
 
 //@desc   Retrieve last messages for all user rooms
-//@route  Get /chat/getLastMessages:roomsIds
+//@route  Get /chat/getLastMessages/:roomsIds
 //@access Private
 const getLastMessages = asyncHandler(async (req, res) => {
   const { roomsIds } = req.params;
   const idsArray = roomsIds.split(",");
 
-  let allMessages = [];
+  //find the messages that belongs to the given chatrooms
+  const lastMessages = await Message.find({
+    roomId: { $in: idsArray },
+  })
+    //sort messages in descending order(most recent first)
+    .sort({ createdAt: -1 })
 
-  for (let i = 0; i < idsArray.length; i++) {
-    const roomMessages = await Message.find()
-      .where("roomId")
-      .equals(idsArray[i]);
+    //get only the last message
+    .limit(idsArray.length);
 
-    if (!roomMessages) {
-      res.status(404);
-      throw new Error(`Unable retrieve messages.`);
-    }
-
-    allMessages.push(roomMessages);
+  if (!lastMessages) {
+    res.status(404);
+    throw new Error("Unable to retrieve messages.");
   }
-  //get last message of each room, excluding undefined values (rooms with no messages)
-  const lastMessages = allMessages
-    .map((nested) => nested[nested.length - 1])
-    .filter((message) => message !== undefined);
 
   res.status(200).json(lastMessages);
 });
 
 //@desc   Retrieve unseen messages
-//@route  Get /chat/getUnseenMessages:userId
+//@route  Get /chat/getUnseenMessages/:userId
 //@access Private
 const getUnseenMessages = asyncHandler(async (req, res) => {
   const { userId } = req.params;

@@ -1,10 +1,12 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../models/UserModel");
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 const JWT_SECRET = process.env.JWT_SECRET;
 const asyncHandler = require("express-async-handler");
+
+const { filterUserData } = require("../utils/userUtils");
+const User = require("../models/UserModel");
 
 // @desc   Register new user
 // @route  POST users/register
@@ -46,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     //keep neccessary user data
     const userData = filterUserData(user);
-
+  
     //respond with userData and token
     res.status(200).json({ userData, token });
   } else {
@@ -73,7 +75,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     //keep neccessary user data
     const userData = filterUserData(user);
-
+    console.log(userData);
     //respond with userData and token
     res.status(200).json({ userData, token });
   } else {
@@ -82,16 +84,6 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid credentials...");
   }
 });
-
-//Exlude password and email from user object
-const filterUserData = (user) => {
-  return {
-    _id: user._id,
-    username: user.username,
-    profileImage: user.profileImage,
-    profileInfo: user.profileInfo,
-  };
-};
 
 //Generate JWT
 const generateToken = (id) => {

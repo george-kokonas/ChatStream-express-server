@@ -1,5 +1,6 @@
 const User = require("../models/UserModel");
 const asyncHandler = require("express-async-handler");
+const { filterUserData } = require("../utils/userUtils");
 
 //@desc   Get user data
 //@route  Get /user/getUser
@@ -7,12 +8,15 @@ const asyncHandler = require("express-async-handler");
 const getUser = asyncHandler(async (req, res) => {
   const {userId} = req.params;
   const user = await User.findById(userId);
+
   if(!user){
     res.status(404);
     console.log(0);
     throw new Error("User not found...")
   }
-  res.status(200).send(user);
+  
+  const filteredUser = filterUserData(user);
+  res.status(200).send(filteredUser);
 });
 
 //@desc   Get user data
@@ -25,7 +29,9 @@ const getRegisteredUsers = asyncHandler(async(req,res) => {
     res.status(404);
     throw new Error("No users found");
   }
-  res.send(users)
+
+  const filteredUsers = users.map((user) => filterUserData(user));
+  res.status(200).send(filteredUsers);
 })
 
 module.exports = {
