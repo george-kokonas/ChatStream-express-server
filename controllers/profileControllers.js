@@ -40,7 +40,7 @@ const setImage = asyncHandler(async (req, res) => {
   res.status(201).json(filteredUser);
 });
 
-//@desc   Update profile info field
+//@desc   Update profile info text
 //@route  Post /profile/setInfo
 //@access Private
 const setInfo = asyncHandler(async (req, res) => {

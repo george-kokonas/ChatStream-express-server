@@ -19,7 +19,7 @@ const getUser = asyncHandler(async (req, res) => {
   res.status(200).send(filteredUser);
 });
 
-//@desc   Get user data
+//@desc   Get all registered users data
 //@route  Get /user/getRegisteredUsers
 //@access Private
 const getRegisteredUsers = asyncHandler(async(req,res) => {
