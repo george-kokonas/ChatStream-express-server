@@ -15,10 +15,10 @@ Click [here](https://chatstream.netlify.app) to see ChatStream running!
 
 ## Features
 
-- User Registration and Login : Register, login, and logout functionality for users using bcrypt for password hashing and JWT (JSON Web Token) for secure authentication.
-- Message Storage : Save user messages in the database to enable message retrieval when users revisit the application.
+- User Registration and Login : Register, login and logout functionality for users using bcrypt for password hashing and JWT (JSON Web Token) for secure authentication.
+- Message Storage : Save users messages on the database to enable message retrieval when users revisit the application.
 - Unread Messages Notifications: Notify users about unread messages when they log in to the application.
-- Last Message Preview: Display a preview of the last message in the conversations card, allowing users to get a glimpse of the recent conversation without opening the chat.
+- Last Message Preview: Handle client's request to display a preview of the last message in the conversations card, allowing users to get a glimpse of the recent conversation without opening the chat.
 - User Profile: Manage profile picture and additional information sent by the client. Profile pictures are securely stored on Cloudinary. The server saves the link to the uploaded image in the database, allowing for easy retrieval and display of user profile picture.
 
 ## Prerequisites
@@ -95,7 +95,7 @@ To use certain features of the application, you will need to obtain credentials 
 
 ## Create the `.env` file:
 
-1. In the root directory of the express server project, create a new file called `.env`
+1. In the root directory of the express server create a new file named `.env`
 2. Open the `.env` file and add the following content:
 
 ```js
@@ -110,8 +110,7 @@ CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
 
 3.  In the `.env` file replace the placeholder values for `DB_URI`, `CLOUDINARY_NAME`,`CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` with the values obtained from the services (see steps above at Obtain Services Credentials section)
 
-4.  In the `.env` file replace placeholder values for
-    `SALT_ROUNDS` with an integer (a common value is 10)
+4.  In the `.env` file replace placeholder values for `SALT_ROUNDS` with an integer (a common value is 10) and
     `JWT_SECRET` with a string of your preference
 
     #### Note : To protect sensitive information and avoid sharing it publicly, make sure to add the `.env` file to your project's `.gitignore` file. This will prevent the file from being included in your version control system and inadvertently exposing your credentials and API keys. It's essential to keep this file private.
@@ -332,7 +331,7 @@ Status: 404 Not Found
 
 ## Feedback and Contributions
 
-Any ideas, suggestions, or bug reports you may have regarding this project are welcome! If you have any feedback or would like to contribute to the development of this application, please feel free to open an issue or submit a pull request. Your input is highly appreciated and helps me improve the functionality and reliability of the application. Together, we can make ChatStream even better!
+Any feedback, ideas, suggestions, or bug reports you may have regarding this project are welcome! If you would like to contribute to the development of this application, please contact me. Together, we can make ChatStream even better!
 
 For any inquiries or direct communication, you can reach out to me via email at [g.kokwnas@gmail.com](mailto:g.kokwnas@gmail.com).
 
@@ -341,5 +340,3 @@ For any inquiries or direct communication, you can reach out to me via email at 
 This project is licensed under the [MIT License](https://opensource.org/license/mit/).
 
 You are free to use, modify, and distribute this project for personal or commercial purposes. Please see the [LICENSE](LICENSE) file for more details.
-
-
