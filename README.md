@@ -6,12 +6,14 @@ This repository contains the Express server for ChatStream, a real-time chat app
 
 This repository is part of a larger project that includes the following components as well:
 
-- [Socket Server](https://github.com/george-kokonas/ChatStream-socket-server): The Socket server handles real-time communication between clients in the ChatStream application.
+- [Socket Server](https://github.com/george-kokonas/ChatStream-socket-server): The Socket server component handles real-time communication between clients in the ChatStream application.
 - [React Client](https://github.com/george-kokonas/ChatStream-react-client): The React client component provides the user interface for ChatStream, allowing users to interact with the application.
 
 You can explore these repositories to learn more about the other components of the project.
 
-Click [here](https://chatstream.netlify.app) to see ChatStream running!
+Click [here](https://chatstream.netlify.app) to see ChatStream deployed and running!
+
+***Please note that ChatStream is constantly evolving, with regular updates that bring new features, enhancements, and performance tweaks.***
 
 ## Features
 
