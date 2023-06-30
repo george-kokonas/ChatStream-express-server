@@ -1,15 +1,15 @@
 # ChatStream - Express Server
 
-This repository contains the Express server for ChatStream, a real-time chat application built with the MERN stack (MongoDB, Express.js, React, and Node.js) and Socket.IO. The Express server handles API requests and database operations for the ChatStream application.
+This repository contains the Express server for ChatStream, a real-time chat application built with the MERN stack (MongoDB, Express.js, React, Node.js) and Socket.IO. The Express server is responsible for handling API requests and database operations for the chat application.
 
 ## Project Overview
 
-This repository is part of a larger project that includes the following components:
+This repository is part of a larger project that includes the following components as well:
 
-- [Socket Server](https://github.com/george-kokonas/ChatStream-socket-server): The Socket server handles real-time communication between clients in the ChatStream application.
-- [React Client](https://github.com/your-username/react-client): The React client provides the user interface for ChatStream, allowing users to interact with the chat application.
+- [Socket Server](git@github.com:george-kokonas/ChatStream-socket-server.git): The Socket server component handles real-time communication between clients in the ChatStream application.
+- [React Client](git@github.com:george-kokonas/ChatStream-react-client.git): The React client component provides the user interface for ChatStream, allowing users to interact with the application.
 
-You can explore these repositories to learn more about the other components of the ChatStream project.
+You can explore these repositories to learn more about the other components of the project.
 
 Click [here](https://chatstream.netlify.app) to see ChatStream running!
 
@@ -18,7 +18,7 @@ Click [here](https://chatstream.netlify.app) to see ChatStream running!
 - User Registration and Login : Register, login and logout functionality for users using bcrypt for password hashing and JWT (JSON Web Token) for secure authentication.
 - Message Storage : Save users messages on the database to enable message retrieval when users revisit the application.
 - Unread Messages Notifications: Notify users about unread messages when they log in to the application.
-- Last Message Preview: Handle client's request to display a preview of the last message in the conversations card, allowing users to get a glimpse of the recent conversation without opening the chat.
+- Last Message Preview: Handle client's request to display preview of the last message, allowing users to get a glimpse of the recent conversation without opening the chat.
 - User Profile: Manage profile picture and additional information sent by the client. Profile pictures are securely stored on Cloudinary. The server saves the link to the uploaded image in the database, allowing for easy retrieval and display of user profile picture.
 
 ## Prerequisites
@@ -34,15 +34,15 @@ If you don't have Node.js or npm installed, you can visit the [Node.js](https://
 
 The following dependencies are required for running the Express server:
 
-- [express](https://expressjs.com/) : A fast and minimalist web application framework for Node.js, providing robust routing and middleware capabilities
+- [express](https://expressjs.com/) : A fast and minimalistic web application framework for Node.js, providing robust routing and middleware capabilities
 
-- [mongoose](https://mongoosejs.com/): A MongoDB object modeling tool for Node.js that provides a straightforward, schema-based solution to model application data and interact with MongoDB databases.
+- [mongoose](https://mongoosejs.com/): A MongoDB object modeling tool for Node.js that provides a straightforward, schema-based solution to model application data and interact with MongoDB databases
 
-- [cors](https://www.npmjs.com/package/cors): A middleware for enabling Cross-Origin Resource Sharing (CORS) in the Express server, allowing requests from different origins.
+- [cors](https://www.npmjs.com/package/cors): A middleware for enabling Cross-Origin Resource Sharing (CORS) in the Express server, allowing requests from different origins
 
-- [dotenv](https://www.npmjs.com/package/dotenv): A module for loading environment variables from a .env file into process.env, simplifying configuration management.
+- [dotenv](https://www.npmjs.com/package/dotenv): A module for loading environment variables from a .env file into process.env, simplifying configuration management
 
-- [bcrypt](https://www.npmjs.com/package/bcrypt): A library for hashing passwords and comparing hashed passwords during authentication.
+- [bcrypt](https://www.npmjs.com/package/bcrypt): A library for hashing passwords and comparing hashed passwords during authentication
 
 - [jsonwebtoken](https://jwt.io/): A library for generating and verifying JSON Web Tokens (JWT) for secure authentication, facilitating user authentication and authorization.
 
@@ -59,7 +59,7 @@ git clone git@github.com:george-kokonas/ChatStream-express-server.git
 
 ```
 
-### 2 .Navigate to the project directory:
+### 2. Navigate to the project directory:
 
 ```
 cd ChatStream-express-server
@@ -89,6 +89,7 @@ To use certain features of the application, you will need to obtain credentials 
   2. Create a new project and cluster within the MongoDB Atlas dashboard.
   3. Obtain the MongoDB URI by navigating to the cluster settings and copy the connection string.
 
+  
 - Cloudinary: Cloudinary is a cloud-based media management platform used for securely storing user profile pictures. Follow these steps to obtain the Cloudinary credentials:
   1. Visit the [Cloudinary](https://cloudinary.com/) website and create an account
   2. Obtain the Cloudinary cloud name, API key, and API secret from the Cloudinary dashboard.
@@ -110,7 +111,7 @@ CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
 
 3.  In the `.env` file replace the placeholder values for `DB_URI`, `CLOUDINARY_NAME`,`CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` with the values obtained from the services (see steps above at Obtain Services Credentials section)
 
-4.  In the `.env` file replace placeholder values for `SALT_ROUNDS` with an integer (a common value is 10) and
+4.  Replace placeholder values for `SALT_ROUNDS` with an integer (a common value is 10) and
     `JWT_SECRET` with a string of your preference
 
     #### Note : To protect sensitive information and avoid sharing it publicly, make sure to add the `.env` file to your project's `.gitignore` file. This will prevent the file from being included in your version control system and inadvertently exposing your credentials and API keys. It's essential to keep this file private.
@@ -181,21 +182,21 @@ in `server.js` file.
 - **Endpoint:** /chat/createChatRoom
 - **Method:** POST
 - **Access:** Private
-- **Description:** Creates new chatroom between two users.
+- **Description:** Creates new chatroom with two participants.
 
 ### Retrieve Existing Chatroom
 
 - **Endpoint:** /chat/getChatRoom/:userId
 - **Method:** GET
 - **Access:** Private
-- **Description:** Retrieves already existing chatroom by userId.
+- **Description:** Retrieves already existing chatroom by user Id.
 
 ### Retrieve New Chatroom
 
 - **Endpoint:** /chat/getNewChatRoom/:roomId
 - **Method:** GET
 - **Access:** Private
-- **Description:** Retrieves chatroom by roomId immediatly after the first sent message.
+- **Description:** Retrieves chatroom by room Id immediatly after the first sent message.
 
 ### Create New Message
 
@@ -209,21 +210,21 @@ in `server.js` file.
 - **Edponint:** /chat/getMessages/:requestedRoomId
 - **Method:** Get
 - **Access:** Private
-- **Description:** Retrieves messages by roomId.
+- **Description:** Retrieves messages by room Id.
 
 ### Retrieve Last Message
 
 - **Endpoint:** /chat/getLastMessages/:roomsIds
 - **Method:** GET
 - **Access:** Private
-- **Description:** Retrieves last sent messages by roomId for every room. It is used on client side for messages previews.
+- **Description:** Retrieves last sent messages by room Id for every room. It is used on client side for messages previews.
 
 ### Retrieve Unseen Messages
 
 - **Endpoint:** /chat/getUnseenMessages/:userId
 - **Method:** GET
 - **Access:** Private
-- **Description:** Retrieves unread messages by userId. It is used on client side to render notifications for the messages received by the user while he was not using the application.
+- **Description:** Retrieves unread messages by user Id. It is used on client side to render notifications for the messages received by the user while he was not using the application.
 
 ### Update Message Status
 
@@ -331,7 +332,7 @@ Status: 404 Not Found
 
 ## Feedback and Contributions
 
-Any feedback, ideas, suggestions, or bug reports you may have regarding this project are welcome! If you would like to contribute to the development of this application, please contact me. Together, we can make ChatStream even better!
+Any feedback, ideas, suggestions, or bug reports you may have regarding this project are welcome! If you would like to contribute to the development of this application, please contact me. Together, we can make ChatStream better!
 
 For any inquiries or direct communication, you can reach out to me via email at [g.kokwnas@gmail.com](mailto:g.kokwnas@gmail.com).
 
