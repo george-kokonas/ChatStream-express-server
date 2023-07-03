@@ -75,7 +75,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     //keep neccessary user data
     const userData = filterUserData(user);
-    console.log(userData);
+   
     //respond with userData and token
     res.status(200).json({ userData, token });
   } else {

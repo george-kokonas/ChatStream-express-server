@@ -11,7 +11,6 @@ const getUser = asyncHandler(async (req, res) => {
 
   if(!user){
     res.status(404);
-    console.log(0);
     throw new Error("User not found...")
   }
   
