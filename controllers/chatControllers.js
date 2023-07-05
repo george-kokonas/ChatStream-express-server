@@ -51,6 +51,53 @@ const getChatRoom = asyncHandler(async (req, res) => {
   res.status(200).json(chatRoom);
 });
 
+//@desc   Delete chatroom
+//@route  Delete /chat/deleteChatRoom/
+//@access Private
+const deleteChatRoom = async (req, res) => {
+  const { roomId, userId } = req.body;
+
+  try {
+    // Find the chat room
+    const chatRoom = await ChatRoom.findById(roomId);
+
+    if (!chatRoom) {
+      return res.status(404).json({ error: "Chat room not found" });
+    }
+
+    // Check if the user is a member of the chat room
+    if (!chatRoom.members.includes(userId)) {
+      return res
+        .status(403)
+        .json({ error: "You are not a member of this chat room" });
+    }
+
+    // Remove the user from the chat room
+    chatRoom.members = chatRoom.members.filter(
+      (memberId) => memberId !== userId
+    );
+
+    //If the chatroom has no members(the other participant deleted also the conversation)
+    if (chatRoom.members.length === 0) {
+
+      // Delete messages
+      await Message.deleteMany({ roomId });
+
+      // Delete chat room
+      await ChatRoom.findByIdAndDelete(roomId);
+
+    } else {
+      //Save changes after filtering members array
+      await chatRoom.save();
+    }
+    res.sendStatus(204);
+    
+  } catch (error) {
+    console.error("Error deleting chat room:", error);
+    res.status(500).json({ error: "Error deleting chat room" });
+  }
+};
+
 //@desc   Create new message
 //@route  Post /chat/createMessage
 //@access Private
@@ -165,9 +212,31 @@ const updateMessagesStatus = asyncHandler(async (req, res) => {
 module.exports = {
   createChatRoom,
   getChatRoom,
+  deleteChatRoom,
   createMessage,
   getMessages,
   getLastMessages,
   getUnseenMessages,
   updateMessagesStatus,
 };
+
+// //@desc   Delete chatroom
+// //@route  Delete /chat/deleteChatRoom/:roomId
+// //@access Private
+// const deleteChatRoom = asyncHandler(async(req,res) => {
+//   const { roomId } = req.params;
+
+//   try {
+//     // Delete messages
+//     await Message.deleteMany({ roomId });
+
+//     // Delete chat room
+//     await ChatRoom.findByIdAndDelete(roomId);
+
+//     res.sendStatus(204);
+
+//   } catch (error) {
+//     console.error('Error deleting chat room:', error);
+//     res.status(500).json({ error: 'Error deleting chat room' });
+//   }
+// })
