@@ -219,24 +219,3 @@ module.exports = {
   getUnseenMessages,
   updateMessagesStatus,
 };
-
-// //@desc   Delete chatroom
-// //@route  Delete /chat/deleteChatRoom/:roomId
-// //@access Private
-// const deleteChatRoom = asyncHandler(async(req,res) => {
-//   const { roomId } = req.params;
-
-//   try {
-//     // Delete messages
-//     await Message.deleteMany({ roomId });
-
-//     // Delete chat room
-//     await ChatRoom.findByIdAndDelete(roomId);
-
-//     res.sendStatus(204);
-
-//   } catch (error) {
-//     console.error('Error deleting chat room:', error);
-//     res.status(500).json({ error: 'Error deleting chat room' });
-//   }
-// })
