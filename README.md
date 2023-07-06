@@ -6,19 +6,18 @@ This repository contains the Express server for ChatStream, a real-time chat app
 
 This repository is part of a larger project that includes the following components as well:
 
-- [Socket Server](https://github.com/george-kokonas/ChatStream-socket-server): The Socket server component handles real-time communication between clients in the ChatStream application.
+- [Socket Server](https://github.com/george-kokonas/ChatStream-socket-server): The Socket server handles real-time communication between clients in the ChatStream application.
 - [React Client](https://github.com/george-kokonas/ChatStream-react-client): The React client component provides the user interface for ChatStream, allowing users to interact with the application.
 
 You can explore these repositories to learn more about the other components of the project.
 
-Click [here](https://chatstream.netlify.app) to see ChatStream deployed and running!
-
-***Please note that ChatStream is constantly evolving, with regular updates that bring new features, enhancements, and performance tweaks.***
+Click [here](https://chatstream.netlify.app) to see ChatStream running!
 
 ## Features
 
 - User Registration and Login : Register, login and logout functionality for users using bcrypt for password hashing and JWT (JSON Web Token) for secure authentication.
 - Message Storage : Save users messages on the database to enable message retrieval when users revisit the application.
+- Chatroom Deletion : Delete user conversations.
 - Unread Messages Notifications: Notify users about unread messages when they log in to the application.
 - Last Message Preview: Handle client's request to display preview of the last message, allowing users to get a glimpse of the recent conversation without opening the chat.
 - User Profile: Manage profile picture and additional information sent by the client. Profile pictures are securely stored on Cloudinary. The server saves the link to the uploaded image in the database, allowing for easy retrieval and display of user profile picture.
@@ -182,6 +181,12 @@ in `server.js` file.
 ### Create New Chatroom
 
 - **Endpoint:** /chat/createChatRoom
+- **Method:** Delete
+- **Access:** Private
+- **Description:** Deletes a chatroom.
+
+### Delete a Chatroom
+- **Endpoint:** /chat/deleteChatRoom/
 - **Method:** POST
 - **Access:** Private
 - **Description:** Creates new chatroom with two participants.
