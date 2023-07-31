@@ -5,7 +5,7 @@ const {
   getChatRoom,
   deleteChatRoom,
   createMessage,
-  getLastMessages,
+  getMessagesPreview,
   getMessages,
   getUnseenMessages,
   updateMessagesStatus,
@@ -20,7 +20,7 @@ router.delete("/deleteChatRoom", auth, deleteChatRoom);
 
 router.post("/createMessage", auth, createMessage);
 router.get("/getMessages/:requestedRoomId", auth, getMessages);
-router.get("/getLastMessages/:roomsIds", auth, getLastMessages);
+router.get("/getMessagesPreview/:roomsIds", auth, getMessagesPreview);
 router.get("/getUnseenMessages/:userId", auth, getUnseenMessages);
 router.put("/updateMessagesStatus/:roomId", auth, updateMessagesStatus);
 

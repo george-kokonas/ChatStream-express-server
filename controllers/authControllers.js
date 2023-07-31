@@ -3,87 +3,91 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 const JWT_SECRET = process.env.JWT_SECRET;
-const asyncHandler = require("express-async-handler");
 
-const { filterUserData } = require("../utils/userUtils");
 const User = require("../models/UserModel");
+const { filterUserData } = require("../utils/userUtils");
 
 // @desc   Register new user
 // @route  POST users/register
 // @access Public
-const registerUser = asyncHandler(async (req, res) => {
-  const { email, username, password } = req.body;
+const registerUser = async (req, res, next) => {
+  try {
+    const { email, username, password } = req.body;
 
-  if (!email || !username || !password) {
-    res.status(400).send({ message: "Please add missing field..." });
-    throw new Error("Please add missing field...");
+    if (!email || !username || !password) {
+      return res.status(400).json({ message: "Please add missing field..." });
+    }
+
+    // Check if email or username is already registered
+    const emailExists = await User.findOne({ email });
+    const usernameExists = await User.findOne({ username });
+
+    if (emailExists) {
+      return res.status(400).json({ message: "Email already registered..." });
+    } else if (usernameExists) {
+      return res
+        .status(400)
+        .json({ message: "Username already registered..." });
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(SALT_ROUNDS);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create user
+    const user = await User.create({
+      email,
+      username,
+      password: hashedPassword,
+    });
+
+    if (user) {
+      // Generate token
+      const token = generateToken(user._id);
+
+      // Keep necessary user data
+      const userData = filterUserData(user);
+
+      // Respond with userData and token
+      res.status(200).json({ userData, token });
+    } else {
+      return res.status(400).json({
+        message: "Unable to SignUp, please try again later...",
+      });
+    }
+  } catch (error) {
+    // Pass the error to the error handling middleware
+    next(error);
   }
-
-  //Check if email or username already registered
-  const emailExists = await User.findOne({ email });
-  const usernameExists = await User.findOne({ username });
-
-  if (emailExists) {
-    res.status(400).send({ message: "Email already registered..." });
-    throw new Error("Email already registered");
-  } else if (usernameExists) {
-    res.status(400).send({ message: "Username already registered..." });
-    throw new Error("Username already registered");
-  }
-
-  //Hash password
-  const salt = await bcrypt.genSalt(SALT_ROUNDS);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  //Create user
-  const user = await User.create({
-    email,
-    username,
-    password: hashedPassword,
-  });
-
-  if (user) {
-    //generate token
-    const token = generateToken(user._id);
-
-    //keep neccessary user data
-    const userData = filterUserData(user);
-  
-    //respond with userData and token
-    res.status(200).json({ userData, token });
-  } else {
-    res
-      .status(400)
-      .send({ message: "Unable to SignUp , please try again later..." });
-    throw new Error("Unable to SignUp...");
-  }
-});
+};
 
 // @desc   Login User
 // @route  POST users/login
 // @access Public
-const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
 
-  //Search for email in DB
-  const user = await User.findOne({ email });
+    // Search for email in DB
+    const user = await User.findOne({ email });
 
-  //if email is found check password match in DB
-  if (user && (await bcrypt.compare(password, user.password))) {
-    //generate token
-    const token = generateToken(user._id);
+    // If email is found, check password match in DB
+    if (user && bcrypt.compare(password, user.password)) {
+      // Generate token
+      const token = generateToken(user._id);
+      // Keep necessary user data
+      const userData = filterUserData(user);
 
-    //keep neccessary user data
-    const userData = filterUserData(user);
-   
-    //respond with userData and token
-    res.status(200).json({ userData, token });
-  } else {
-    res.status(400);
-    res.send({ message: "Invalid credentials" });
-    throw new Error("Invalid credentials...");
+      // Respond with userData and token
+      res.status(200).json({ userData, token });
+    } else {
+      res.status(400).json({ message: "Invalid credentials" });
+    }
+  } catch (error) {
+    // Pass the error to the next middleware for handling
+    next(error);
   }
-});
+};
 
 //Generate JWT
 const generateToken = (id) => {

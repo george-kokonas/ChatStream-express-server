@@ -1,74 +1,72 @@
 const User = require("../models/UserModel");
-const asyncHandler = require("express-async-handler");
 const { cloudinary } = require("../utils/cloudinary");
 const { filterUserData } = require("../utils/userUtils");
 
 //@desc   Upload profile image
 //@route  Post /profile/setImage
 //@access Private
-const setImage = asyncHandler(async (req, res) => {
-  const { userId, profileImage } = req.body;
+const setImage = async (req, res, next) => {
+  try {
+    const { userId, profileImage } = req.body;
 
-  if (!userId || !profileImage) {
-    res.status(400);
-    throw new Error("Unable to upload photo...");
-  }
+    if (!userId || !profileImage) {
+      res.status(400).json({ error: "Unable to upload photo..." });
+    } else {
+      // Send image to Cloudinary
+      const uploadResponse = await cloudinary.uploader.upload(profileImage);
 
-  //send image to cloudinary
-  const uploadResponse = await cloudinary.uploader.upload(profileImage);
-  if (!uploadResponse) {
-    res.status(400);
-    throw new Error("Unable to upload photo...");
-  }
+      if (!uploadResponse) {
+        res.status(400).json({ error: "Unable to upload photo..." });
+      } else {
+        // Update user profile photo
+        const user = await User.findByIdAndUpdate(
+          userId,
+          { profileImage: uploadResponse.secure_url },
+          { new: true }
+        );
 
-  //update user profile photo
-  const user = await User.findByIdAndUpdate(
-    userId,
-    {
-      profileImage: uploadResponse.secure_url,
-    },
-    {
-      new: true,
+        if (!user) {
+          res.status(500).json({ error: "Something went wrong..." });
+        } else {
+          const filteredUser = filterUserData(user);
+          res.status(201).json(filteredUser);
+        }
+      }
     }
-  );
-
-  if (!user) {
-    res.status(500);
-    throw new Error("Something went wrong...");
+  } catch (error) {
+    // Pass the error to the error handling middleware
+    next(error);
   }
-  const filteredUser = filterUserData(user);
-  res.status(201).json(filteredUser);
-});
+};
 
 //@desc   Update profile info text
 //@route  Post /profile/setInfo
 //@access Private
-const setInfo = asyncHandler(async (req, res) => {
-  const { userId, userInfo } = req.body;
+const setInfo = async (req, res, next) => {
+  try {
+    const { userId, userInfo } = req.body;
 
-  if (!userInfo) {
-    res.status(400);
-    throw new Error("Unable to update user info...");
-  }
+    if (!userInfo) {
+      res.status(400).json({ error: "Unable to update user info..." });
+    } else {
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { profileInfo: userInfo },
+        { new: true }
+      );
 
-  const user = await User.findByIdAndUpdate(
-    userId,
-    {
-      profileInfo: userInfo,
-    },
-    {
-      new: true,
+      if (!user) {
+        res.status(500).json({ error: "Something went wrong..." });
+      } else {
+        const filteredUser = filterUserData(user);
+        res.status(201).json(filteredUser);
+      }
     }
-  );
-
-  if (!user) {
-    res.status(500);
-    throw new Error("Something went wrong...");
+  } catch (error) {
+    // Pass the error to the error handling middleware
+    next(error);
   }
-
-  const filteredUser = filterUserData(user);
-  res.status(201).json(filteredUser);
-});
+};
 
 module.exports = {
   setImage,
